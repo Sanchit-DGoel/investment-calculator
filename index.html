@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Investment Calculator - Calculate projected returns based on historical market data">
+  <title>Investment Calculator - Plan Your Financial Future</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="calculator-header">
+      <h1>Investment Calculator</h1>
+      <p class="subtitle">Discover Your Investment Potential</p>
+      <p class="description">Calculate projected returns based on historical market data</p>
+    </header>
+
+    <!-- Input Section -->
+    <section class="input-section">
+      <div class="card">
+        <div class="card-header">
+          <h3>1. Choose Your Investment Strategy</h3>
+        </div>
+        <div id="strategy-selector" class="strategy-grid">
+          <!-- Strategy cards will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>2. Enter Investment Amount</h3>
+        </div>
+        <div class="input-group">
+          <label for="initial-amount">Initial Investment:</label>
+          <div class="input-with-slider">
+            <input
+              type="text"
+              id="initial-amount"
+              class="input-field currency-input"
+              value="$10,000"
+            />
+            <input
+              type="range"
+              id="initial-slider"
+              class="slider"
+              min="100"
+              max="1000000"
+              value="10000"
+              step="100"
+            />
+            <div class="slider-labels">
+              <span>$100</span>
+              <span>$1,000,000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="monthly-contribution">Monthly Contribution (optional):</label>
+          <div class="input-with-slider">
+            <input
+              type="text"
+              id="monthly-contribution"
+              class="input-field currency-input"
+              value="$500"
+            />
+            <input
+              type="range"
+              id="monthly-slider"
+              class="slider"
+              min="0"
+              max="10000"
+              value="500"
+              step="50"
+            />
+            <div class="slider-labels">
+              <span>$0</span>
+              <span>$10,000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>3. Select Investment Timeline</h3>
+        </div>
+        <div id="time-period-selector" class="button-group">
+          <button class="period-btn" data-years="1">1 Year</button>
+          <button class="period-btn" data-years="5">5 Years</button>
+          <button class="period-btn active" data-years="10">10 Years</button>
+          <button class="period-btn" data-years="20">20 Years</button>
+          <button class="period-btn" data-years="30">30 Years</button>
+        </div>
+        <div class="custom-period">
+          <label for="custom-years">Or enter custom timeline:</label>
+          <input type="number" id="custom-years" class="input-field" min="1" max="50" placeholder="Years">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>4. Display Options</h3>
+        </div>
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-best" checked>
+            <span>Show Best Case Scenario</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-expected" checked>
+            <span>Show Expected Scenario</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-worst" checked>
+            <span>Show Worst Case Scenario</span>
+          </label>
+        </div>
+      </div>
+
+      <button id="calculate-btn" class="btn-primary btn-large">
+        Calculate Returns
+      </button>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="results" style="display: none;">
+      <div class="card primary-result">
+        <h2>Your Projected Investment Value</h2>
+        <div class="result-display">
+          <p class="timeline-text">After <span id="years-display">10</span> Years</p>
+          <div class="currency-display" id="final-value">$0</div>
+          <div class="result-details">
+            <p>Total Invested: <span id="total-invested">$0</span></p>
+            <p>Total Gain: <span id="total-gain" class="gain-positive">$0</span> (<span id="gain-percent">0%</span>)</p>
+            <p>Average Annual Return: <span id="avg-return">0%</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Scenario Analysis</h3>
+        <p class="card-description">Based on historical market volatility</p>
+        <div id="scenario-display" class="scenario-grid">
+          <!-- Scenarios will be populated by JavaScript -->
+        </div>
+        <p class="disclaimer">
+          <strong>Disclaimer:</strong> Past performance does not guarantee future results.
+          These projections are based on historical data and should not be considered investment advice.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Growth Over Time</h3>
+        <div class="chart-container">
+          <canvas id="growth-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Investment Breakdown</h3>
+        <p class="card-description" id="strategy-name-display"></p>
+        <div class="allocation-container">
+          <div class="chart-container-small">
+            <canvas id="allocation-chart"></canvas>
+          </div>
+          <div id="allocation-details" class="allocation-list">
+            <!-- Allocation details will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="compare-btn" class="btn-secondary">Compare All Strategies</button>
+        <button id="recalculate-btn" class="btn-secondary">Adjust Inputs</button>
+      </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison-section" id="comparison" style="display: none;">
+      <div class="card">
+        <h2>Strategy Comparison</h2>
+        <p class="card-description">Compare how different strategies perform with your investment parameters</p>
+        <div class="table-container">
+          <table id="comparison-table" class="comparison-table">
+            <thead>
+              <tr>
+                <th>Strategy</th>
+                <th>Final Value</th>
+                <th>Total Gain</th>
+                <th>Avg Return</th>
+                <th>Risk Level</th>
+                <th>Volatility</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-tbody">
+              <!-- Comparison data will be populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <button id="hide-comparison-btn" class="btn-secondary">Hide Comparison</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="calculator-footer">
+      <p>&copy; 2025 Investment Calculator | Educational Purposes Only</p>
+      <p>Based on historical market data and investment research</p>
+    </footer>
+  </div>
+
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Include our JavaScript files -->
+  <script src="js/strategies.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
